@@ -539,3 +539,18 @@ img { max-width: 100%; display: block; }
   .stat b { font-size: 1.2rem; }
   .skill-cards { grid-template-columns: 1fr 1fr; }
 }
+
+/* FIX: lift the chat button above the bottom dock on mobile */
+@media (max-width: 768px) {
+  .chat-fab {
+    bottom: 96px;
+    right: 14px;
+    width: 52px;
+    height: 52px;
+  }
+  .chat-panel {
+    bottom: 158px;
+    right: 12px;
+    height: min(430px, 55vh);
+  }
+}
