@@ -4,7 +4,7 @@ import { profile, emailjsConfig } from '../data.js'
 import Reveal from './Reveal.jsx'
 
 // Button that magnetically pulls toward the cursor
-function MagnetBtn({ href, children }) {
+function MagnetBtn({ href, children, download }) {
   const ref = useRef()
   const onMove = (e) => {
     const r = ref.current.getBoundingClientRect()
@@ -14,8 +14,16 @@ function MagnetBtn({ href, children }) {
   }
   const onLeave = () => { ref.current.style.transform = '' }
   return (
-    <a ref={ref} className="magnet-btn" href={href} target="_blank" rel="noreferrer"
-       onMouseMove={onMove} onMouseLeave={onLeave}>
+    
+      ref={ref}
+      className="magnet-btn"
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      {...(download ? { download } : {})}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+    >
       {children}
     </a>
   )
@@ -84,7 +92,7 @@ export default function Contact() {
           <div className="socials">
             <MagnetBtn href={profile.github}>GitHub</MagnetBtn>
             <MagnetBtn href={profile.linkedin}>LinkedIn</MagnetBtn>
-            <MagnetBtn href={profile.resume}>Resume</MagnetBtn>
+            <MagnetBtn href={profile.resume} download="Bhanu_Prakash_Reddy_Resume.pdf">Resume</MagnetBtn>
           </div>
         </Reveal>
 
