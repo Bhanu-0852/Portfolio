@@ -3,7 +3,6 @@ import emailjs from '@emailjs/browser'
 import { profile, emailjsConfig } from '../data.js'
 import Reveal from './Reveal.jsx'
 
-// Button that magnetically pulls toward the cursor
 function MagnetBtn({ href, children, download }) {
   const ref = useRef()
   const onMove = (e) => {
@@ -13,30 +12,20 @@ function MagnetBtn({ href, children, download }) {
     ref.current.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`
   }
   const onLeave = () => { ref.current.style.transform = '' }
+  const extra = download ? { download } : {}
   return (
-    
-      ref={ref}
-      className="magnet-btn"
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      {...(download ? { download } : {})}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-    >
+    <a ref={ref} className="magnet-btn" href={href} target="_blank" rel="noreferrer" {...extra} onMouseMove={onMove} onMouseLeave={onLeave}>
       {children}
     </a>
   )
 }
 
-// True until the three EmailJS IDs in src/data.js are filled in
 const emailjsNotConfigured = Object.values(emailjsConfig).some((v) => v.startsWith('YOUR_'))
 
 export default function Contact() {
-  const [status, setStatus] = useState(null) // null | 'sending' | 'ok' | 'missing' | 'mailto'
+  const [status, setStatus] = useState(null)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
 
-  // Fallback: open the visitor's email app with everything pre-filled
   const openMailApp = () => {
     const subject = encodeURIComponent(`Portfolio contact from ${form.name || 'a visitor'}`)
     const body = encodeURIComponent(`${form.message}\n\n— ${form.name}\n${form.email}`)
@@ -48,14 +37,11 @@ export default function Contact() {
       setStatus('missing')
       return
     }
-
-    // EmailJS not set up yet → gracefully hand off to the visitor's mail app
     if (emailjsNotConfigured) {
       openMailApp()
       setStatus('mailto')
       return
     }
-
     setStatus('sending')
     try {
       await emailjs.send(
@@ -67,7 +53,6 @@ export default function Contact() {
       setStatus('ok')
       setForm({ name: '', email: '', message: '' })
     } catch {
-      // Send failed (rate limit / network) → same graceful mail-app handoff
       openMailApp()
       setStatus('mailto')
     }
